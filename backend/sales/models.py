@@ -19,7 +19,8 @@ class ItemPrice(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"Item Price: {self.item.name} - {self.price} - {self.created_at}"
+        # return f"Item Price: {self.item.name} - {self.price} - {self.created_at}"
+        return f"{self.price}"
 
 
 class DailySale(models.Model):
@@ -36,20 +37,18 @@ class DailySale(models.Model):
 
 class FoodSale(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    price = models.ForeignKey(ItemPrice, on_delete=models.CASCADE)
     date = models.ForeignKey(DailySale, on_delete=models.CASCADE)
-    prepared_quantity = models.DecimalField(max_digits=5, decimal_places=3)
-    leftover_quantity = models.DecimalField(max_digits=5, decimal_places=3)
-
-    @property
-    def price(self):
-        latest_price =  self.item.prices.first()
-        return latest_price.price if latest_price else Decimal(0)
+    prepared_quantity = models.DecimalField(max_digits=5, decimal_places=3, default=0)
+    leftover_quantity = models.DecimalField(max_digits=5, decimal_places=3, default=0)
 
     @property
     def sale(self):
-        if self.prepared_quantity is not None and self.leftover_quantity is not None:
-            return (self.prepared_quantity - self.leftover_quantity)*10*self.price
-        return 0
+        return (self.prepared_quantity - self.leftover_quantity)*10*self.price.price
+
+    def save(self, *args, **kwargs):
+        self.price = ItemPrice.objects.filter(item=self.item).first()
+        super().save(*args, **kwargs)
 
 
     def __str__(self):
