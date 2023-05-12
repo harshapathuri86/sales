@@ -28,11 +28,10 @@ class DailySaleSerializer(serializers.ModelSerializer):
 class FoodSaleSerializer(serializers.ModelSerializer):
 
     sale = serializers.SerializerMethodField()
-    price = serializers.SerializerMethodField()
 
     class Meta:
         model = FoodSale
-        fields = ['item', 'prepared_quantity', 'leftover_quantity']
+        fields = '__all__'
         extra_kwargs = {
             'prepared_quantity': {'required': True, 'min_value': 0},
             'leftover_quantity': {'required': True, 'min_value': 0},
@@ -40,9 +39,6 @@ class FoodSaleSerializer(serializers.ModelSerializer):
 
     def get_sale(self, obj):
         return obj.sale
-
-    def get_price(self, obj):
-        return obj.price
 
     def validate(self, attrs):
         prepared_quantity = attrs.get('prepared_quantity')
