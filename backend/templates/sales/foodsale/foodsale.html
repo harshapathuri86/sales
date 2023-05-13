@@ -1,0 +1,48 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>Food Sale : {{foodsale.item.name}} - {{foodsale.date}}</title>
+{% endblock %}
+
+{% block content %}
+<h1>Update Food Sale : {{foodsale.item.name}} - {{foodsale.date}}</h1>
+    <table class="table table-striped" style="width:50%">
+        <tbody>
+                <tr>
+                    <th>Item</th>
+                    <td>{{foodsale.item.name}}</td>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <td>{{foodsale.date}}</td>
+                </tr>
+                <tr>
+                    <th>Price</th>
+                    <td>{{ foodsale.item.price }}</td>
+                </tr>
+                <tr>
+                    <th>Prepared quantity</th>
+                    <td>{{foodsale.prepared_quantity}}
+                </tr>
+                <tr>
+                    <th>Leftover quantity</th>
+                    <td>{{foodsale.leftover_quantity}}
+                </tr>
+                <tr>
+                    <th>Sold quantity</th>
+                    <td>{{foodsale.sold_quantity}}
+                </tr>
+                <tr>
+                    <th>Sale</th>
+                    <td>{{foodsale.sale}}</td>
+                </tr>
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-primary" 
+        onclick="location.href='{% url 'foodsale-update' foodsale.id %}'">Update</button>
+
+    <button type="button" class="btn btn-danger"
+        onclick="location.href='{% url 'foodsale-delete' foodsale.id %}'">Delete</button>
+
+
+{% endblock %}

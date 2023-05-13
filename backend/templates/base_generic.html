@@ -18,21 +18,22 @@
   <body>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-2">
+        <div class="col-sm-3">
           {% block sidebar %}
             <ul class="sidebar-nav">
               <li><a href="{% url 'index' %}">Home</a></li>
-              {% if user.is_authenticated %}
-                <li><a href="{% url 'logout' %}">Logout</a></li>
                 <li><a href="{% url 'item-list' %}">Items</a></li>
-                <li><a href="{% url 'itemprice-list' %}">Item Prices</a></li>
-              {% else %}
+                <li><a href="{% url 'dailysale-list' %}">Daily Sales</a></li>
+                <li><a href="{% url 'foodsale-list' %}">Food Sales</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
                 <li><a href="{% url 'login' %}">Login</a></li>
-              {% endif %}
+                {% endif %}
             </ul>
           {% endblock %}
         </div>
-        <div class="col-sm-10 ">
+        <div class="col-sm-9">
           {% block content %}{% endblock %}
         </div>
       </div>

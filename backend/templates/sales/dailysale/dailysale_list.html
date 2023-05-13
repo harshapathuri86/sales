@@ -1,16 +1,16 @@
 {% extends "base_generic.html" %}
 
 {% block title %}
-<title>Items</title>
+<title>Daily Sales</title>
 {% endblock %}
 
 {% block content %}
-    <h1>Items</h1>
+    <h1>Daily Sales</h1>
 
     <div class="container">
         <div class="row">
             <div class="col-sm-12" style="text-align: right;">
-                <button class="btn btn-primary" onclick="location.href='{% url 'item-add' %}'">Add New</button>
+                <button class="btn btn-primary" onclick="location.href='{% url 'dailysale-add' %}'">Add New</button>
             </div>
         </div>
 
@@ -18,31 +18,29 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Price</th>
+                    <th>Date</th>
+                    <th>Total Sale</th>
                 </tr>
             </thead>
             <tbody>
-                {% for item in items %}
+                {% for dailysale in dailysales %}
                 <tr>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.price }}</td>
-                    {% comment %}
+                    <td>{{ dailysale.date }}</td>
+                    <td>{{ dailysale.total_sales }}</td>
                         <td>
     <button type="button" class="btn btn-info" 
-        onclick="location.href='{% url 'item' item.id %}'">View</button>
+        onclick="location.href='{% url 'dailysale' dailysale.id %}'">View</button>
                         </td>
-                    {% endcomment %}
                         <td>
     <button type="button" class="btn btn-primary" 
-        onclick="location.href='{% url 'item-update' item.id %}'">Update</button>
+        onclick="location.href='{% url 'dailysale-update' dailysale.id %}'">Update</button>
                         </td>
-                        {% comment %}
                         <td>
+                            {% comment %}
     <button type="button" class="btn btn-danger"
-        onclick="location.href='{% url 'item-delete' item.id %}'">Delete</button>
+        onclick="location.href='{% url 'dailysale-delete' dailysale.id %}'">Delete</button>
                         </td>
-                        {% endcomment %}
+                            {% endcomment %}
                 </tr>
                 {% endfor %}
             </tbody>

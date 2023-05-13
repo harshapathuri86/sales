@@ -1,0 +1,51 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>Daily Sale : {{dailysale.date}}</title>
+{% endblock %}
+
+{% block content %}
+    <h1>Update Item</h1>
+    <table class="table table-striped" style="width:50%">
+        <tbody>
+                <tr>
+                    <th>Date</th>
+                    <td>{{ dailysale.date}}</td>
+                </tr>
+                <tr>
+                    <th>Total Sales</th>
+                    <td>{{ dailysale.total_sales }}</td>
+                </tr>
+        </tbody>
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Prepared</th>
+                    <th>Leftover</th>
+                    <th>Sold</th>
+                    <th>Sale</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for foodsale in dailysale.foodsale_set.all %}
+                <tr>
+                    <td>{{ foodsale.item.name }}</td>
+                    <td>{{ foodsale.price }}</td>
+                    <td>{{ foodsale.prepared_quantity}}</td>
+                    <td>{{ foodsale.leftover_quantity}}</td>
+                    <td>{{ foodsale.sold_quantity }}</td>
+                    <td>{{ foodsale.sale}}</td>
+                </tr>
+                {% endfor %}
+    </table>
+    <button type="button" class="btn btn-primary" 
+        onclick="location.href='{% url 'dailysale-update' dailysale.id %}'">Update</button>
+
+    <button type="button" class="btn btn-danger"
+        onclick="location.href='{% url 'dailysale-delete' dailysale.id %}'">Delete</button>
+
+
+{% endblock %}

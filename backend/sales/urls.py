@@ -1,25 +1,25 @@
-from rest_framework import routers
-from django.urls import path, include
+from django.urls import path
 from .views import *
-from . import models
-
-item_list = ItemViewSet.as_view({'get':'list', 'post':'create'})
-item_detail = ItemViewSet.as_view({'get':'retrieve', 'post': 'update'})
-item_delete = ItemViewSet.as_view({'post':'destroy'})
-
-itemprice_list = ItemPriceViewSet.as_view({'get':'list', 'post':'create'})
-itemprice_detail = ItemPriceViewSet.as_view({'get':'retrieve', 'post':'update'})
-itemprice_delete = ItemPriceViewSet.as_view({'post':'destroy'})
-
-
 
 urlpatterns = [
-        path(r'items/', item_list, name='item-list'),
-        path(r'items/<int:pk>/delete', item_delete, name='item-delete'),
-        path(r'items/<int:pk>/', item_detail, name='item'),
+ 
+    path("items/", ItemListView.as_view(), name="item-list"),
+    path("item/<int:pk>/", ItemDetailView.as_view(), name="item"),
+    path("item/add", ItemCreateView.as_view(), name="item-add"),
+    path("item/<int:pk>/update", ItemUpdateView.as_view(), name="item-update"),
+    path("item/<int:pk>/delete", ItemDeleteView.as_view(), name="item-delete"),
 
-        path(r'itemprices/', itemprice_list, name='itemprice-list'),
-        path(r'itemprices/<int:pk>/delete', itemprice_delete, name='itemprice-delete'),
-        path(r'itemprices/<int:pk>/', itemprice_detail, name='itemprice'),
+    path("dailysales/", DailySaleListView.as_view(), name="dailysale-list"),
+    path("dailysale/<int:pk>/", DailySaleDetailView.as_view(), name="dailysale"),
+    # path("dailysale/add", DailySaleCreateView.as_view(), name="dailysale-add"),
+    path("dailysale/add", daily_add, name="dailysale-add"),
+    path("dailysale/<int:pk>/update", daily_update, name="dailysale-update"),
+    path("dailysale/<int:pk>/delete", DailySaleDeleteView.as_view(), name="dailysale-delete"),
+
+    path("foodsales/", FoodSaleListView.as_view(), name="foodsale-list"),
+    path("foodsale/<int:pk>/", FoodSaleDetailView.as_view(), name="foodsale"),
+    path("foodsale/add", FoodSaleCreateView.as_view(), name="foodsale-add"),
+    path("foodsale/<int:pk>/update", FoodSaleUpdateView.as_view(), name="foodsale-update"),
+    path("foodsale/<int:pk>/delete", FoodSaleDeleteView.as_view(), name="foodsale-delete"),
 
 ]

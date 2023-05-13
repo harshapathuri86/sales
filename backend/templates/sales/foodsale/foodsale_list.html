@@ -1,0 +1,62 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>Food Sales</title>
+{% endblock %}
+
+{% block content %}
+    <h1>Food Sales</h1>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12" style="text-align: right;">
+                <button class="btn btn-primary" onclick="location.href='{% url 'foodsale-add' %}'">Add New</button>
+            </div>
+        </div>
+
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Date</th>
+                    {% comment %}
+                    <th>Prepared</th>
+                    <th>Leftover</th>
+                    {% endcomment %}
+                    <th>Sold</th>
+                    <th>Sale</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for foodsale in foodsales %}
+                <tr>
+                    <td>{{ foodsale.item.name }}</td>
+                    <td>{{ foodsale.price }}</td>
+                    <td>{{ foodsale.date }}</td>
+                    {% comment %}
+                    <td>{{ foodsale.prepared_quantity}}</td>
+                    <td>{{ foodsale.leftover_quantity}}</td>
+                    {% endcomment %}
+                    <td>{{ foodsale.sold_quantity }}</td>
+                    <td>{{ foodsale.sale}}</td>
+                    <td>
+    <button type="button" class="btn btn-info" 
+        onclick="location.href='{% url 'foodsale' foodsale.id %}'">View</button>
+                        </td>
+                        <td>
+    <button type="button" class="btn btn-primary" 
+        onclick="location.href='{% url 'foodsale-update' foodsale.id %}'">Update</button>
+                        </td>
+                        {% comment %}
+                        <td>
+    <button type="button" class="btn btn-danger"
+        onclick="location.href='{% url 'foodsale-delete' foodsale.id %}'">Delete</button>
+                        </td>
+                        {% endcomment %}
+                </tr>
+                {% endfor %}
+            </tbody>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+{% block title %}
+<title>Update Daily Sale: {{date}} </title>
+{% endblock %}
+{% block content %}
+<h1>Update Daily Sale: {{date}}</h1>
+<form method="post">
+  {% csrf_token %}
+  {{dailysale_form.as_p}}
+  {% for foodsale_form in foodsale_forms %}
+  {{foodsale_form.as_p}}
+  {% endfor %}
+  <button type="submit">Update</button>
+</form>
+{% endblock %}
+

@@ -9,14 +9,6 @@ class ItemSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ItemPriceSerializer(serializers.ModelSerializer):
-
-    created_at = serializers.DateTimeField(format = None, required=False)
-
-    class Meta:
-        model = ItemPrice
-        fields = '__all__'
-
 class DailySaleSerializer(serializers.ModelSerializer):
 
     total_sales = serializers.SerializerMethodField()
