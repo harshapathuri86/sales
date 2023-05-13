@@ -1,4 +1,5 @@
 from django.db.models.expressions import fields
+from django.db.models.fields import files
 from rest_framework import serializers
 from .models import *
 
@@ -9,6 +10,9 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class ItemPriceSerializer(serializers.ModelSerializer):
+
+    created_at = serializers.DateTimeField(format = None, required=False)
+
     class Meta:
         model = ItemPrice
         fields = '__all__'

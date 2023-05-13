@@ -15,6 +15,10 @@ class ItemPrice(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def item_name(self):
+        return self.item.name
+
     class Meta:
         ordering = ['-created_at']
 

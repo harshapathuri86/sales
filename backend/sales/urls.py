@@ -1,22 +1,25 @@
 from rest_framework import routers
 from django.urls import path, include
-from . import views
+from .views import *
+from . import models
 
-# router = routers.DefaultRouter()
-# router.register(r'items', views.ItemViewSet)
-# router.register(r'item-prices', views.ItemPriceViewSet)
-# router.register(r'daily-sales', views.DailySaleViewSet)
-# router.register(r'food-sales', views.FoodSaleViewSet)
+item_list = ItemViewSet.as_view({'get':'list', 'post':'create'})
+item_detail = ItemViewSet.as_view({'get':'retrieve', 'post': 'update'})
+item_delete = ItemViewSet.as_view({'post':'destroy'})
 
-# urlpatterns = router.urls
+itemprice_list = ItemPriceViewSet.as_view({'get':'list', 'post':'create'})
+itemprice_detail = ItemPriceViewSet.as_view({'get':'retrieve', 'post':'update'})
+itemprice_delete = ItemPriceViewSet.as_view({'post':'destroy'})
+
+
 
 urlpatterns = [
-    path(r'items/', views.ItemList.as_view()),
-    path(r'items/<int:itemId>', views.ItemDetail.as_view()),
-    path(r'item-prices/', views.ItemPriceList.as_view()),
-    path(r'item-prices/<int:itemPriceId>', views.ItemPriceDetail.as_view()),
-    path(r'daily-sales/', views.DailySaleList.as_view()),
-    path(r'daily-sales/<int:dailySaleId>', views.DailySaleDetail.as_view()),
-    path(r'food-sales/', views.FoodSaleList.as_view()),
-    path(r'food-sales/<int:foodSaleId>', views.FoodSaleDetail.as_view()),
+        path(r'items/', item_list, name='item-list'),
+        path(r'items/<int:pk>/delete', item_delete, name='item-delete'),
+        path(r'items/<int:pk>/', item_detail, name='item'),
+
+        path(r'itemprices/', itemprice_list, name='itemprice-list'),
+        path(r'itemprices/<int:pk>/delete', itemprice_delete, name='itemprice-delete'),
+        path(r'itemprices/<int:pk>/', itemprice_detail, name='itemprice'),
+
 ]

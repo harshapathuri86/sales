@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>Sales Calculator</title>
+{% endblock %}
+
+{% block content %}
+  <h1>Sales Calculator</h1>
+  {% if user.is_authenticated %}
+  <p> Hello {{user.username}} </p>
+  {% else %}
+  <p> Login to update records </p>
+  {% endif %}
+{% endblock %}
