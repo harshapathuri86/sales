@@ -1,17 +1,17 @@
 {% extends "base_generic.html" %}
 
 {% block title %}
-<title>Create Food Sale</title>
+<title>Update Counter</title>
 {% endblock %}
 
 {% block content %}
 
-<h1>Create Food Sale</h1>
+<h1>Update Item</h1>
 
 <form method="post">
   {% csrf_token %}
   {{form.as_p}}
-  <button type="submit">Create</button>
+  <button type="submit">Update</butto>
 </form>
 
 {% endblock %}

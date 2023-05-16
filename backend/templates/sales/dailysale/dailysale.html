@@ -32,7 +32,7 @@
             <tbody>
                 {% for foodsale in dailysale.foodsale_set.all %}
                 <tr>
-                    <td>{{ foodsale.item.name }}</td>
+                    <td>{{ foodsale.item }}</td>
                     <td>{{ foodsale.price }}</td>
                     <td>{{ foodsale.prepared_quantity}}</td>
                     <td>{{ foodsale.leftover_quantity}}</td>

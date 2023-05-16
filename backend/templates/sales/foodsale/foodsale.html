@@ -1,16 +1,22 @@
 {% extends "base_generic.html" %}
 
 {% block title %}
-<title>Food Sale : {{foodsale.item.name}} - {{foodsale.date}}</title>
+<title>Food Sale : {{foodsale.item}}</title>
 {% endblock %}
 
 {% block content %}
-<h1>Update Food Sale : {{foodsale.item.name}} - {{foodsale.date}}</h1>
+<h1>{{foodsale.item}}</h1>
+<h2> {{foodsale.counter}} </h2> 
+<h3> {{foodsale.date}}</h3>
     <table class="table table-striped" style="width:50%">
         <tbody>
                 <tr>
                     <th>Item</th>
-                    <td>{{foodsale.item.name}}</td>
+                    <td>{{foodsale.item}}</td>
+                </tr>
+                <tr>
+                    <th>Counter</th>
+                    <td>{{foodsale.counter}}</td>
                 </tr>
                 <tr>
                     <th>Date</th>
@@ -25,11 +31,11 @@
                     <td>{{foodsale.prepared_quantity}}
                 </tr>
                 <tr>
-                    <th>Leftover quantity</th>
+                    <th>(-) Leftover quantity</th>
                     <td>{{foodsale.leftover_quantity}}
                 </tr>
                 <tr>
-                    <th>Sold quantity</th>
+                    <th>(=) Sold quantity</th>
                     <td>{{foodsale.sold_quantity}}
                 </tr>
                 <tr>

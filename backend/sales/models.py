@@ -2,8 +2,17 @@ from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
-class Item(models.Model):
+class Counter(models.Model):
     name = models.CharField(max_length=50, unique=True)
+
+    def clean(self):
+        self.name = self.name.capitalize()
+
+    def __str__(self):
+        return self.name
+
+class Item(models.Model):
+    name = models.CharField(max_length=10, unique=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def clean(self):
@@ -12,7 +21,8 @@ class Item(models.Model):
         self.name = self.name.capitalize()
 
     def __str__(self):
-        return f"{self.name} - {self.price}"
+        # return f"{self.name} - {self.price}"
+        return self.name
 
 class DailySale(models.Model):
     date = models.DateField(default =  timezone.now, unique=True)
@@ -29,6 +39,7 @@ class DailySale(models.Model):
 
 class FoodSale(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    counter = models.ForeignKey(Counter, on_delete=models.CASCADE)
     date = models.ForeignKey(DailySale, on_delete=models.CASCADE)
 
     price = models.DecimalField(max_digits=10, decimal_places=2,null=True)
@@ -44,10 +55,10 @@ class FoodSale(models.Model):
             raise ValidationError("Leftover quantity cannot be greater than prepared quantity.")
 
     # def validate_unique(self, exclude=None):
-    #     qs = FoodSale.objects.filter(item=self.item, date=self.date)
+    #     qs = FoodSale.objects.filter(item=self.item, date=self.date, counter=self.counter)
     #     if qs.exists():
-    #         raise ValidationError('Food sale for this item and date already exists')
-
+    #         raise ValidationError('Food sale for this item, counter and date already exists')
+    #
     @property
     def sold_quantity(self):
         return (self.prepared_quantity - self.leftover_quantity)
@@ -62,4 +73,4 @@ class FoodSale(models.Model):
 
 
     def __str__(self):
-        return f"Food sale {self.item} - {self.date}"
+        return f"Food sale {self.item} - {self.counter} - {self.date}"

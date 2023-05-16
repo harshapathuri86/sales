@@ -18,10 +18,11 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Item</th>
-                    <th>Price</th>
                     <th>Date</th>
+                    <th>Item</th>
+                    <th>Counter</th>
                     {% comment %}
+                    <th>Price</th>
                     <th>Prepared</th>
                     <th>Leftover</th>
                     {% endcomment %}
@@ -32,10 +33,11 @@
             <tbody>
                 {% for foodsale in foodsales %}
                 <tr>
-                    <td>{{ foodsale.item.name }}</td>
-                    <td>{{ foodsale.price }}</td>
                     <td>{{ foodsale.date }}</td>
+                    <td>{{ foodsale.item }}</td>
+                    <td>{{ foodsale.counter }}</td>
                     {% comment %}
+                    <td>{{ foodsale.price }}</td>
                     <td>{{ foodsale.prepared_quantity}}</td>
                     <td>{{ foodsale.leftover_quantity}}</td>
                     {% endcomment %}

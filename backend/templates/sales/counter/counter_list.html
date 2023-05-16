@@ -1,16 +1,16 @@
 {% extends "base_generic.html" %}
 
 {% block title %}
-<title>Items</title>
+<title>Counters</title>
 {% endblock %}
 
 {% block content %}
-    <h1>Items</h1>
+    <h1>Counters</h1>
 
     <div class="container">
         <div class="row">
             <div class="col-sm-12" style="text-align: right;">
-                <button class="btn btn-primary" onclick="location.href='{% url 'item-add' %}'">Add New</button>
+                <button class="btn btn-primary" onclick="location.href='{% url 'counter-add' %}'">Add New</button>
             </div>
         </div>
 
@@ -19,26 +19,24 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Price</th>
                 </tr>
             </thead>
             <tbody>
-                {% for item in items %}
+                {% for counter in counters %}
                 <tr>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.price }}</td>
+                    <td>{{ counter.name }}</td>
                         <td>
     <button type="button" class="btn btn-primary" 
-        onclick="location.href='{% url 'item-update' item.id %}'">Update</button>
+        onclick="location.href='{% url 'counter-update' counter.id %}'">Update</button>
                         </td>
                         {% comment %}
                         <td>
     <button type="button" class="btn btn-info" 
-        onclick="location.href='{% url 'item' item.id %}'">View</button>
+        onclick="location.href='{% url 'counter' counter.id %}'">View</button>
                         </td>
                         <td>
     <button type="button" class="btn btn-danger"
-        onclick="location.href='{% url 'item-delete' item.id %}'">Delete</button>
+        onclick="location.href='{% url 'counter-delete' counter.id %}'">Delete</button>
                         </td>
                         {% endcomment %}
                 </tr>

@@ -1,0 +1,24 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>Counter : {{counter.name|title}}</title>
+{% endblock %}
+
+{% block content %}
+    <h1>Update counter</h1>
+    <table class="table table-striped" style="width:50%">
+        <tbody>
+                <tr>
+                    <th>Name</th>
+                    <td>{{ counter.name | title }}</td>
+                </tr>
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-primary" 
+        onclick="location.href='{% url 'counter-update' counter.id %}'">Update</button>
+
+    <button type="button" class="btn btn-danger"
+        onclick="location.href='{% url 'counter-delete' counter.id %}'">Delete</button>
+
+
+{% endblock %}
