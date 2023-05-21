@@ -6,16 +6,13 @@ class ItemAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
 
-@admin.register(DailySale)
-class DailySaleAdmin(admin.ModelAdmin):
-    list_display = ('date', 'total_sales')
-    search_fields = ('date',)
-    list_filter = ('date',)
-    readonly_fields = ('total_sales',)
+@admin.register(Counter)
+class CounterAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
 
 @admin.register(FoodSale)
 class FoodSaleAdmin(admin.ModelAdmin):
-    list_display = ('date', 'item', 'prepared_quantity', 'leftover_quantity','price', 'sale')
-    search_fields = ('date__date', 'item__name')
-    list_filter = ('date__date', 'item__name')
-    readonly_fields = ('sale','price')
+    list_display = ('date', 'item','counter', 'prepared_quantity', 'leftover_quantity','price', 'sale')
+    search_fields = ('date', 'item__name', 'counter__name')
+    list_filter = ('date', 'item__name', 'counter__name')

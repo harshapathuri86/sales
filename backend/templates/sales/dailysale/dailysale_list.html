@@ -10,7 +10,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12" style="text-align: right;">
-                <button class="btn btn-primary" onclick="location.href='{% url 'dailysale-add' %}'">Add New</button>
+                <button class="btn btn-primary" onclick="location.href='{% url 'counter-select' %}'">Add New</button>
             </div>
         </div>
 
@@ -25,22 +25,12 @@
             <tbody>
                 {% for dailysale in dailysales %}
                 <tr>
-                    <td>{{ dailysale.date }}</td>
-                    <td>{{ dailysale.total_sales }}</td>
-                        <td>
+                    <td>{{dailysale.date}}</td>
+                    <td>{{dailysale.total_sale}}</td>
+                    <td>
     <button type="button" class="btn btn-info" 
-        onclick="location.href='{% url 'dailysale' dailysale.id %}'">View</button>
+        onclick="location.href='{% url 'dailysale' dailysale.date %}'">View</button>
                         </td>
-                        <td>
-    <button type="button" class="btn btn-primary" 
-        onclick="location.href='{% url 'dailysale-update' dailysale.id %}'">Update</button>
-                        </td>
-                        <td>
-                            {% comment %}
-    <button type="button" class="btn btn-danger"
-        onclick="location.href='{% url 'dailysale-delete' dailysale.id %}'">Delete</button>
-                        </td>
-                            {% endcomment %}
                 </tr>
                 {% endfor %}
             </tbody>

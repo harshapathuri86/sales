@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>Add sales</title>
+{% endblock %}
+
+{% block content %}
+
+<h1>Add sales</h1>
+<h2>Counter: {{counter.name}}</h2>
+<h3>Date: {{date}}</h3>
+
+  <form method="post">
+    {% csrf_token %}
+    {% for form in forms %}
+      {{ form.as_p }}
+    {% endfor %}
+    <button type="submit">Submit</butto>
+  </form>
+
+
+{% endblock %}

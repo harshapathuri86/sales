@@ -1,22 +1,72 @@
 import datetime
-from rest_framework import viewsets, status
-from rest_framework.routers import Response
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
-from django.http import Http404
-from .models import *
-from .serializers import *
-from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
-# from django_filters.rest_framework import DjangoFilterBackend
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import ModelForm
 from django.contrib.auth.decorators import login_required
+from django.db.models import F, Sum, Count, Aggregate
+from django.db.models.functions import Coalesce
+from django.db.models import DecimalField
+from .models import *
+from .forms import *
+
+@login_required
+def select_counter(request):
+    if request.method == 'POST':
+        form = CounterSelectForm(request.POST)
+        if form.is_valid():
+            counter = form.cleaned_data['counter']
+            date = form.cleaned_data['date']
+            # check if foodsale with this counter on this date exists
+            if FoodSale.objects.filter(counter=counter, date=date).exists():
+                form.add_error('counter', 'FoodSale with this counter on this date already exists')
+                return render(request, 'sales/counter/counter_select.html', {'form': form})
+            else:
+                return redirect('dailysale-add', counter_id=counter.id, date=date)
+    return render(request, 'sales/counter/counter_select.html', {'form': CounterSelectForm})
+
+@login_required
+def add_sale(request, counter_id, date):
+    counter = Counter.objects.get(id=counter_id)
+    items = Item.objects.all()
+    if request.method == 'POST':
+        forms = []
+        forms = [ FoodSaleForm(request.POST, prefix=item.id) for item in items ]
+
+        if all([ form.is_valid() for form in forms ]):
+            for form in forms:
+                form.save()
+            return redirect('dailysale-list')
+        else:
+            return render(request, 'sales/dailysale/dailysale_add.html', {'forms': forms, 'counter': counter, 'date': date})
+
+    if request.method == 'GET':
+        forms = []
+        for item in items:
+            form = FoodSaleForm(initial={'item': item, 'counter': counter, 'date': date}, prefix=item.id)
+            forms.append(form)
+        return render(request, 'sales/dailysale/dailysale_add.html', {'forms': forms, 'counter': counter, 'date': date})
+
+# write a view to compute daily sale and show it
+def dailysale_list(request):
+
+    dailysales = FoodSale.objects.values('date').annotate(total_sale=Sum((F('prepared_quantity')-F('leftover_quantity'))*F('price'))).order_by('-date')
+
+    context = {'dailysales':dailysales}
+    return render(request, 'sales/dailysale/dailysale_list.html', context)
+
+def dailysale_view(request, date):
+
+    # filter sale based on date and then group by counter and calculate sale
+    dailysale = FoodSale.objects.filter(date=date).values('counter__name').annotate(total_sale=Sum((F('prepared_quantity')-F('leftover_quantity'))*F('price'))).order_by('-total_sale')
+
+    context = {'dailysale':dailysale, 'date':date}
+    return render(request, 'sales/dailysale/dailysale.html', context)
+
+
+# generic views
 
 class ItemListView(ListView):
     model = Item
@@ -45,33 +95,32 @@ class ItemDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'sales/item/item_delete.html'
     success_url = reverse_lazy('item-list')
 
+class CounterListView(ListView):
+    model = Counter
+    template_name = 'sales/counter/counter_list.html'
+    context_object_name = 'counters'
 
-class DailySaleListView(ListView):
-    model = DailySale
-    template_name = 'sales/dailysale/dailysale_list.html'
-    context_object_name = 'dailysales'
+class CounterDetailView(DetailView):
+    model = Counter
+    template_name = 'sales/counter/counter.html'
+    context_object_name = 'counter'
 
-class DailySaleDetailView(DetailView):
-    model = DailySale
-    template_name = 'sales/dailysale/dailysale.html'
-    context_object_name = 'dailysale'
-
-class DailySaleCreateView(LoginRequiredMixin, CreateView):
-    model = DailySale
-    template_name = 'sales/dailysale/dailysale_create.html'
+class CounterCreateView(LoginRequiredMixin, CreateView):
+    model = Counter
+    template_name = 'sales/counter/counter_create.html'
     fields = '__all__'
-    success_url = reverse_lazy('dailysale-list')
+    success_url = reverse_lazy('counter-list')
 
-class DailySaleUpdateView(LoginRequiredMixin, UpdateView):
-    model = DailySale
-    template_name = 'sales/dailysale/dailysale_update.html'
+class CounterUpdateView(LoginRequiredMixin, UpdateView):
+    model = Counter
+    template_name = 'sales/counter/counter_update.html'
     fields = '__all__'
-    success_url = reverse_lazy('dailysale-list')
+    success_url = reverse_lazy('counter-list')
 
-class DailySaleDeleteView(LoginRequiredMixin, DeleteView):
-    model = DailySale
-    template_name = 'sales/dailysale/dailysale_delete.html'
-    success_url = reverse_lazy('dailysale-list')
+class CounterDeleteView(LoginRequiredMixin, DeleteView):
+    model = Counter
+    template_name = 'sales/counter/counter_delete.html'
+    success_url = reverse_lazy('counter-list')
 
 class FoodSaleListView(ListView):
     model = FoodSale
@@ -86,13 +135,13 @@ class FoodSaleDetailView(DetailView):
 class FoodSaleCreateView(LoginRequiredMixin, CreateView):
     model = FoodSale
     template_name = 'sales/foodsale/foodsale_create.html'
-    fields = ['item','date', 'prepared_quantity', 'leftover_quantity']
+    fields = ['item', 'date', 'counter', 'prepared_quantity', 'leftover_quantity']
     success_url = reverse_lazy('foodsale-list')
 
 class FoodSaleUpdateView(LoginRequiredMixin, UpdateView):
     model = FoodSale
     template_name = 'sales/foodsale/foodsale_update.html'
-    fields = ['item','date', 'prepared_quantity', 'leftover_quantity']
+    fields = ['item', 'date', 'counter', 'prepared_quantity', 'leftover_quantity']
     success_url = reverse_lazy('foodsale-list')
 
 class FoodSaleDeleteView(LoginRequiredMixin, DeleteView):
@@ -100,90 +149,4 @@ class FoodSaleDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'sales/foodsale/foodsale_delete.html'
     success_url = reverse_lazy('foodsale-list')
 
-class DailySaleForm(LoginRequiredMixin, ModelForm):
-    class Meta:
-        model = DailySale
-        fields = '__all__'
 
-class FoodSaleForm(LoginRequiredMixin ,ModelForm):
-    class Meta:
-        model = FoodSale
-        fields = '__all__'
-        exclude = ('date', 'price')
-
-# login required
-@login_required
-def daily_add(request):
-    # create a form that takes dailysale form, multiple foodsale forms each for each item
-    # add a food form each for each item
-    # and a submit button
-    if request.method == 'POST':
-        dailysale_form = DailySaleForm(request.POST, prefix='dailysale')
-        foodsale_forms = [FoodSaleForm(request.POST, prefix=str(item.id)) for item in Item.objects.all()]
-        if dailysale_form.is_valid() and all([form.is_valid() for form in foodsale_forms]):
-            dailysale = dailysale_form.save(commit=False)
-            foodsales = [form.save(commit=False) for form in foodsale_forms]
-            # check if two forms have same item value and add error to that forms
-            item_pos = {}
-            for i, foodsale in enumerate(foodsales):
-                if FoodSale.objects.filter(date=dailysale, item=foodsale.item).exists():
-                    foodsale_forms[i].add_error(None, 'Entry for this item already exists')
-                if foodsale.item in item_pos:
-                    foodsale_forms[i].add_error(None, 'Entry for this item is repeated in the form')
-                    foodsale_forms[item_pos[foodsale.item]].add_error(None, 'Entry for this item is repeated in the form')
-                else:
-                    item_pos[foodsale.item] = i
-            if any([form.errors for form in foodsale_forms]):
-                return render(request, 'sales/dailysale/dailysale_create.html', {'dailysale_form': dailysale_form, 'foodsale_forms': foodsale_forms, 'date': dailysale.date})
-            else:
-                dailysale_form.save()
-                for form in foodsale_forms:
-                    foodsale = form.save(commit=False)
-                    foodsale.date = dailysale
-                    foodsale.price = foodsale.item.price
-                    foodsale.save()
-                return redirect('dailysale', pk=dailysale.pk)
-        else:
-            return render(request, 'sales/dailysale/dailysale_create.html', {'dailysale_form': dailysale_form, 'foodsale_forms': foodsale_forms})
-    else:
-        dailysale_form = DailySaleForm(prefix='dailysale', instance=DailySale(date=datetime.date.today()))
-        foodsale_forms = [FoodSaleForm(prefix=str(item.id), instance=FoodSale(item=item)) for item in Item.objects.all()]
-    return render(request, 'sales/dailysale/dailysale_create.html', {'dailysale_form': dailysale_form, 'foodsale_forms': foodsale_forms})
-
-@login_required
-def daily_update(request, pk=None):
-    dailysale = DailySale.objects.get(pk=pk)
-    if request.method == 'POST':
-        foodsale_forms = [FoodSaleForm(request.POST, prefix=str(item.id)) for item in Item.objects.all()]
-
-        if all([form.is_valid() for form in foodsale_forms]):
-            foodsales = [form.save(commit=False) for form in foodsale_forms]
-            # check if two forms have same item value and add error to that forms
-            item_pos = {}
-            for i, foodsale in enumerate(foodsales):
-                if foodsale.item in item_pos:
-                    foodsale_forms[i].add_error(None, 'Entry for this item is repeated in the form')
-                else:
-                    item_pos[foodsale.item] = i
-            if any([form.errors for form in foodsale_forms]):
-                return render(request, 'sales/dailysale/dailysale_update.html', {'foodsale_forms': foodsale_forms, 'date': dailysale.date})
-            else:
-                for form in foodsale_forms:
-                    # update record
-                    foodsale = form.save(commit=False)
-                    foodsale.date = dailysale
-                    FoodSale.objects.filter(date=dailysale, item=foodsale.item).update(**form.cleaned_data)
-
-                return redirect('dailysale', pk=dailysale.pk)
-        else:
-            return render(request, 'sales/dailysale/dailysale_update.html', {'foodsale_forms': foodsale_forms, 'date': dailysale.date})
-    else:
-        # if not all items have food sale, put 0 s and show form
-        # if all items have food sale, show form with values
-        foodsale_forms = []
-        for item in Item.objects.all():
-            if FoodSale.objects.filter(date=dailysale, item=item).exists():
-                foodsale_forms.append(FoodSaleForm(prefix=str(item.id), instance=FoodSale.objects.get(date=dailysale, item=item)))
-            else:
-                foodsale_forms.append(FoodSaleForm(prefix=str(item.id), instance=FoodSale(item=item)))
-    return render(request, 'sales/dailysale/dailysale_update.html', {'date': dailysale.date, 'foodsale_forms': foodsale_forms})
