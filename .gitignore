@@ -2,3 +2,5 @@
 **/.secret_key.txt
 # ignore static
 **/static
+## virtual env
+**/venv
