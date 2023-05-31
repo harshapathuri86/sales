@@ -1,0 +1,4 @@
+# ignore secret key
+**/.secret_key.txt
+# ignore static
+**/static

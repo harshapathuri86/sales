@@ -1,0 +1,42 @@
+server {
+    server_name sales.pathuri.xyz www.sales.pathuri.xyz;
+    location / {
+    	proxy_pass          http://localhost:8000;
+    	proxy_set_header    Host $host;
+    	proxy_set_header    X-Forwarded-Proto $scheme;
+    }
+    location /static/ {
+	    autoindex on;
+	    alias /var/www/sales/static/;
+    }
+
+    listen [::]:443 ssl; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/sales.pathuri.xyz/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/sales.pathuri.xyz/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+}
+
+server {
+    if ($host = www.sales.pathuri.xyz) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = sales.pathuri.xyz) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    server_name sales.pathuri.xyz www.sales.pathuri.xyz;
+    listen 80;
+    listen [::]:80 ;
+    return 404; # managed by Certbot
+
+
+
+
+}
