@@ -1,0 +1,3 @@
+# cron script to run backup everyday at 4 am
+0 4 * * * /home/ubuntu/sales/backup_script.sh
+
