@@ -4,3 +4,5 @@
 **/static
 ## virtual env
 **/venv
+## ignore dumps
+dumps
