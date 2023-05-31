@@ -25,3 +25,7 @@ run ` gunicorn backend.wsgi:application -c gunicorn_config.py` to run the progra
 use the `sales.pathuri.xyz` nginx config to deploy
 use the sales.service to autostart the server.
 
+using [sqlite backup](https://github.com/efrecon/sqlite-backup) to backup sqlite db for last 30 days using
+```
+backup.sh -k 30 -d /home/ubuntu/sales/dumps/ -s 86400 /home/ubuntu/sales/backend/db.sqlite3
+```
