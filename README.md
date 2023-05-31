@@ -26,8 +26,5 @@ use the `sales.pathuri.xyz` nginx config to deploy
 use the sales.service to autostart the server.
 
 using [sqlite backup](https://github.com/efrecon/sqlite-backup) to backup sqlite db for last 30 backups
-```
-backup.sh -k 30 -d /home/ubuntu/sales/dumps/ -s 10 /home/ubuntu/sales/backend/db.sqlite3
-```
 
-need to run this periodically as cron to do regular backups
+need to run `backup_script.sh` as cron job to do regular backups
