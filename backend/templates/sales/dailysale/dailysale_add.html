@@ -1,4 +1,5 @@
 {% extends "base_generic.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %}
 <title>Add sales</title>
@@ -9,14 +10,15 @@
 <h1>Add sales</h1>
 <h2>Counter: {{counter.name}}</h2>
 <h3>Date: {{date}}</h3>
-
+<br/>
+<div class="form-group">
   <form method="post">
     {% csrf_token %}
     {% for form in forms %}
-      {{ form.as_p }}
+    {{ form | crispy }}
     {% endfor %}
-    <button type="submit">Submit</butto>
-  </form>
+    <button class="btn btn-primary" type="submit">Create</button>
+</div>
 
 
 {% endblock %}

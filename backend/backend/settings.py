@@ -28,7 +28,7 @@ SECRET_KEY = "django-insecure-hkc&%2#wo0qp1#)1&zra5)(nn*4tjrqrln!e4&p&+(j-!^yo^%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['100.127.147.10', '127.0.0.1', 'artix']
 
 
 # Application definition
@@ -42,16 +42,22 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "sales",
+    "crispy_forms",
+    "crispy_bootstrap5",
 ]
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
 MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
+"django.middleware.security.SecurityMiddleware",
+"django.contrib.sessions.middleware.SessionMiddleware",
+"corsheaders.middleware.CorsMiddleware",
+"django.middleware.common.CommonMiddleware",
+"django.middleware.csrf.CsrfViewMiddleware",
+"django.contrib.auth.middleware.AuthenticationMiddleware",
+"django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
