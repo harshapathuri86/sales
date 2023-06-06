@@ -23,8 +23,8 @@
                     <th>Date</th>
                     {% comment %}
                     <th>Price</th>
-                    <th>Prepared</th>
-                    <th>Leftover</th>
+                    <th>Outgoing</th>
+                    <th>Incoming</th>
                     {% endcomment %}
                     <th>Sold</th>
                     <th>Sale</th>
@@ -38,8 +38,8 @@
                     <td>{{ foodsale.date }}</td>
                     {% comment %}
                     <td>{{ foodsale.price }}</td>
-                    <td>{{ foodsale.prepared_quantity}}</td>
-                    <td>{{ foodsale.leftover_quantity}}</td>
+                    <td>{{ foodsale.outgoing}}</td>
+                    <td>{{ foodsale.incoming}}</td>
                     {% endcomment %}
                     <td>{{ foodsale.sold_quantity }}</td>
                     <td>{{ foodsale.sale}}</td>

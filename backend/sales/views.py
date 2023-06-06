@@ -52,7 +52,7 @@ def add_sale(request, counter_id, date):
 # write a view to compute daily sale and show it
 def dailysale_list(request):
 
-    dailysales = FoodSale.objects.values('date').annotate(total_sale=Sum((F('prepared_quantity')-F('leftover_quantity'))*F('price'))).order_by('-date')
+    dailysales = FoodSale.objects.values('date').annotate(total_sale=Sum((F('outgoing')-F('incoming'))*F('price'))).order_by('-date')
 
     context = {'dailysales':dailysales}
     return render(request, 'sales/dailysale/dailysale_list.html', context)
@@ -60,7 +60,7 @@ def dailysale_list(request):
 def dailysale_view(request, date):
 
     # filter sale based on date and then group by counter and calculate sale
-    dailysale = FoodSale.objects.filter(date=date).values('counter__name').annotate(total_sale=Sum((F('prepared_quantity')-F('leftover_quantity'))*F('price'))).order_by('-total_sale')
+    dailysale = FoodSale.objects.filter(date=date).values('counter__name').annotate(total_sale=Sum((F('outgoing')-F('incoming'))*F('price'))).order_by('-total_sale')
 
     context = {'dailysale':dailysale, 'date':date}
     return render(request, 'sales/dailysale/dailysale.html', context)
@@ -135,13 +135,13 @@ class FoodSaleDetailView(DetailView):
 class FoodSaleCreateView(LoginRequiredMixin, CreateView):
     model = FoodSale
     template_name = 'sales/foodsale/foodsale_create.html'
-    fields = ['item', 'date', 'counter', 'prepared_quantity', 'leftover_quantity']
+    fields = ['item', 'date', 'counter', 'outgoing', 'incoming']
     success_url = reverse_lazy('foodsale-list')
 
 class FoodSaleUpdateView(LoginRequiredMixin, UpdateView):
     model = FoodSale
     template_name = 'sales/foodsale/foodsale_update.html'
-    fields = ['item', 'date', 'counter', 'prepared_quantity', 'leftover_quantity']
+    fields = ['item', 'date', 'counter', 'outgoing', 'incoming']
     success_url = reverse_lazy('foodsale-list')
 
 class FoodSaleDeleteView(LoginRequiredMixin, DeleteView):

@@ -13,7 +13,8 @@ class Counter(models.Model):
 
 class Item(models.Model):
     name = models.CharField(max_length=50, unique=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=5, decimal_places=3)
+
 
     def clean(self):
         if self.price < 0:
@@ -40,25 +41,25 @@ class FoodSale(models.Model):
     counter = models.ForeignKey(Counter, on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
 
-    price = models.DecimalField(max_digits=10, decimal_places=2,null=True)
-    prepared_quantity = models.DecimalField(max_digits=5, decimal_places=3, default=0)
-    leftover_quantity = models.DecimalField(max_digits=5, decimal_places=3, default=0)
+    price = models.DecimalField(max_digits=5, decimal_places=3)
+    outgoing = models.IntegerField()
+    incoming = models.IntegerField()
 
     def clean(self):
-        if self.prepared_quantity < 0:
-            raise ValidationError("Prepared quantity cannot be less than zero.")
-        if self.leftover_quantity < 0:
-            raise ValidationError("Leftover quantity cannot be less than zero.")
-        if self.leftover_quantity > self.prepared_quantity:
-            raise ValidationError("Leftover quantity cannot be greater than prepared quantity.")
+        if self.outgoing < 0:
+            raise ValidationError("Outgoing quantity cannot be less than zero.")
+        if self.incoming < 0:
+            raise ValidationError("Incoming quantity cannot be less than zero.")
+        if self.incoming > self.outgoing:
+            raise ValidationError("Incoming quantity cannot be greater than prepared quantity.")
 
     @property
     def sold_quantity(self):
-        return (self.prepared_quantity - self.leftover_quantity)
+        return (self.outgoing - self.incoming)
 
     @property
     def sale(self):
-        return (self.prepared_quantity - self.leftover_quantity)*10*self.price
+        return (self.outgoing - self.incoming)*self.price
 
     def save(self, *args, **kwargs):
         self.price = self.item.price
