@@ -21,12 +21,13 @@
                     <th>Item</th>
                     <th>Counter</th>
                     <th>Date</th>
+                    <th>Time</th>
                     {% comment %}
                     <th>Price</th>
-                    <th>Prepared</th>
-                    <th>Leftover</th>
-                    {% endcomment %}
+                    <th>Outgoing</th>
+                    <th>Incoming</th>
                     <th>Sold</th>
+                    {% endcomment %}
                     <th>Sale</th>
                 </tr>
             </thead>
@@ -36,12 +37,22 @@
                     <td>{{ foodsale.item}}</td>
                     <td>{{ foodsale.counter }}</td>
                     <td>{{ foodsale.date }}</td>
+                    <td>
+                        {% if foodsale.sale_type == 'L' %}
+                          Lunch
+                        {% elif foodsale.sale_type == 'D' %}
+                          Dinner
+                        {% else %}
+                          Unknown
+                        {% endif %}
+                    </td>
+
                     {% comment %}
                     <td>{{ foodsale.price }}</td>
-                    <td>{{ foodsale.prepared_quantity}}</td>
-                    <td>{{ foodsale.leftover_quantity}}</td>
-                    {% endcomment %}
+                    <td>{{ foodsale.outgoing}}</td>
+                    <td>{{ foodsale.incoming}}</td>
                     <td>{{ foodsale.sold_quantity }}</td>
+                    {% endcomment %}
                     <td>{{ foodsale.sale}}</td>
                     <td>
     <button type="button" class="btn btn-info" 

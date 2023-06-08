@@ -13,7 +13,8 @@ class Counter(models.Model):
 
 class Item(models.Model):
     name = models.CharField(max_length=50, unique=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=5, decimal_places=3)
+
 
     def clean(self):
         if self.price < 0:
@@ -23,42 +24,49 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
+
+SALE_TYPE_CHOICES = (
+    ('L', 'Lunch'),
+    ('D', 'Dinner'),
+)
+
 class FoodSale(models.Model):
-    
+
     class Meta:
-        ordering = ['-date', 'counter', 'item']
+        ordering = ['-date', 'counter', 'sale_type', 'item',]
         indexes = [
             models.Index(fields=['counter']),
             models.Index(fields=['item']),
             models.Index(fields=['date', 'counter', 'item']),
         ]
         constraints = [
-            models.UniqueConstraint(fields=['item', 'date', 'counter'], name='unique_food_sale'),
+            models.UniqueConstraint(fields=['item', 'date', 'counter', 'sale_type'], name='unique_food_sale'),
         ]
 
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     counter = models.ForeignKey(Counter, on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
+    sale_type = models.CharField(max_length=1, choices=SALE_TYPE_CHOICES, default='L')
 
-    price = models.DecimalField(max_digits=10, decimal_places=2,null=True)
-    prepared_quantity = models.DecimalField(max_digits=5, decimal_places=3, default=0)
-    leftover_quantity = models.DecimalField(max_digits=5, decimal_places=3, default=0)
+    price = models.DecimalField(max_digits=5, decimal_places=3)
+    outgoing = models.IntegerField()
+    incoming = models.IntegerField()
 
     def clean(self):
-        if self.prepared_quantity < 0:
-            raise ValidationError("Prepared quantity cannot be less than zero.")
-        if self.leftover_quantity < 0:
-            raise ValidationError("Leftover quantity cannot be less than zero.")
-        if self.leftover_quantity > self.prepared_quantity:
-            raise ValidationError("Leftover quantity cannot be greater than prepared quantity.")
+        if self.outgoing < 0:
+            raise ValidationError("Outgoing quantity cannot be less than zero.")
+        if self.incoming < 0:
+            raise ValidationError("Incoming quantity cannot be less than zero.")
+        if self.incoming > self.outgoing:
+            raise ValidationError("Incoming quantity cannot be greater than prepared quantity.")
 
     @property
     def sold_quantity(self):
-        return (self.prepared_quantity - self.leftover_quantity)
+        return (self.outgoing - self.incoming)
 
     @property
     def sale(self):
-        return (self.prepared_quantity - self.leftover_quantity)*10*self.price
+        return (self.outgoing - self.incoming)*self.price
 
     def save(self, *args, **kwargs):
         self.price = self.item.price

@@ -1,27 +1,58 @@
 {% extends "base_generic.html" %}
 
 {% block title %}
-<title>Daily Sale: {{date}}</title>
+<title>Daily Sale</title>
 {% endblock %}
 
 {% block content %}
-<h1>Daily Sale: {{date}}</h1>
+<br/>
+<h3>Daily Sale: </h3>
+<h1> {{counter}},
+    {% if sale_type == 'L' %}
+    Lunch
+    {% elif sale_type == 'D' %}
+    Dinner
+    {% else %}
+    Unknown
+    {% endif %}
+    , {{date}}</h1>
+</h1>
+<h3> Total Sale: {{total_sale}}</h3>
 
+<br/>
     <div class="container">
         <table class="table table-striped">
             <thead>
-                <th>Counter</th>
-                <th>Total Sale</th>
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Outgoing</th>
+                    <th>Incoming</th>
+                    <th>Sold</th>
+                    <th>Sale</th>
+                </tr>
             </thead>
             <tbody>
-                {% for sale in dailysale %}
+                {% for foodsale in foodsales %}
                 <tr>
-                    <td>{{sale.counter__name}}</td>
-                    <td>{{sale.total_sale}}</td>
-                        {% comment %}
+                    <td>{{ foodsale.item}}</td>
+                    <td>{{ foodsale.price }}</td>
+                    <td>{{ foodsale.outgoing}}</td>
+                    <td>{{ foodsale.incoming}}</td>
+                    <td>{{ foodsale.sold_quantity }}</td>
+                    <td>{{ foodsale.sale}}</td>
                     <td>
     <button type="button" class="btn btn-info" 
-        onclick="location.href='{% url 'dailysale' dailysale.counter.id dailysale.date %}'">View</button>
+        onclick="location.href='{% url 'foodsale' foodsale.id %}'">View</button>
+                        </td>
+                        {% comment %}
+                        <td>
+    <button type="button" class="btn btn-primary" 
+        onclick="location.href='{% url 'foodsale-update' foodsale.id %}'">Update</button>
+                        </td>
+                        <td>
+    <button type="button" class="btn btn-danger"
+        onclick="location.href='{% url 'foodsale-delete' foodsale.id %}'">Delete</button>
                         </td>
                         {% endcomment %}
                 </tr>
@@ -29,6 +60,5 @@
             </tbody>
         </table>
     </div>
-
 {% endblock %}
 
