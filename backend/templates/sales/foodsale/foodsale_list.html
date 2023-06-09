@@ -21,12 +21,13 @@
                     <th>Item</th>
                     <th>Counter</th>
                     <th>Date</th>
+                    <th>Time</th>
                     {% comment %}
                     <th>Price</th>
                     <th>Outgoing</th>
                     <th>Incoming</th>
-                    {% endcomment %}
                     <th>Sold</th>
+                    {% endcomment %}
                     <th>Sale</th>
                 </tr>
             </thead>
@@ -36,17 +37,27 @@
                     <td>{{ foodsale.item}}</td>
                     <td>{{ foodsale.counter }}</td>
                     <td>{{ foodsale.date }}</td>
+                    <td>
+                        {% if foodsale.sale_type == 'L' %}
+                          Lunch
+                        {% elif foodsale.sale_type == 'D' %}
+                          Dinner
+                        {% else %}
+                          Unknown
+                        {% endif %}
+                    </td>
+
                     {% comment %}
                     <td>{{ foodsale.price }}</td>
                     <td>{{ foodsale.outgoing}}</td>
                     <td>{{ foodsale.incoming}}</td>
-                    {% endcomment %}
                     <td>{{ foodsale.sold_quantity }}</td>
+                    {% endcomment %}
                     <td>{{ foodsale.sale}}</td>
                     <td>
     <button type="button" class="btn btn-info" 
         onclick="location.href='{% url 'foodsale' foodsale.id %}'">View</button>
-                        </td>
+                       </td>
                         <td>
     <button type="button" class="btn btn-primary" 
         onclick="location.href='{% url 'foodsale-update' foodsale.id %}'">Update</button>
@@ -61,4 +72,4 @@
                 {% endfor %}
             </tbody>
 
-{% endblock %}
+{% endblock %} 

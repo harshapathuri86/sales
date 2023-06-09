@@ -17,8 +17,8 @@ urlpatterns = [
 
     path("dailysale/select", select_counter, name="counter-select"),
     path("dailysales/", dailysale_list, name="dailysale-list"),
-    path("dailysale/<str:date>/", dailysale_view, name="dailysale"),
-    path("dailysale/add/<int:counter_id>/<str:date>/", add_sale, name="dailysale-add"),
+    path("dailysale/<int:counter_id>/<str:date>/<str:sale_type>", dailysale_view, name="dailysale"),
+    path("dailysale/add/<int:counter_id>/<str:date>/<str:sale_type>", add_sale, name="dailysale-add"),
 
     # path("dailysales/", DailySaleListView.as_view(), name="dailysale-list"),
     # path("dailysale/<int:pk>/", DailySaleDetailView.as_view(), name="dailysale"),

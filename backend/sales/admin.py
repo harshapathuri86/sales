@@ -13,6 +13,6 @@ class CounterAdmin(admin.ModelAdmin):
 
 @admin.register(FoodSale)
 class FoodSaleAdmin(admin.ModelAdmin):
-    list_display = ('date', 'item','counter', 'outgoing', 'incoming','price', 'sale')
+    list_display = ('date', 'item','counter', 'outgoing', 'incoming','price', 'sale', 'sale_type')
     search_fields = ('date', 'item__name', 'counter__name')
     list_filter = ('date', 'item__name', 'counter__name')

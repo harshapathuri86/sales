@@ -1,11 +1,27 @@
 {% extends "base_generic.html" %}
 
 {% block title %}
-<title>Food Sale : {{foodsale.item.name}} - {{foodsale.date}}</title>
+<title>Food Sale</title>
 {% endblock %}
 
 {% block content %}
-<h1>Update Food Sale : {{foodsale.item.name}} - {{foodsale.date}}</h1>
+<h3>Update Food Sale :</h3>
+<h2>
+    {{foodsale.counter}} 
+    - 
+    {% if foodsale.sale_type == 'L' %}
+        Lunch
+    {% elif foodsale.sale_type == 'D' %}
+        Dinner
+    {% else %}
+        Unknown
+    {% endif %}
+    -
+    {{foodsale.date}}
+</h2>
+<h1> {{foodsale.item.name}} </h1>
+
+
     <table class="table table-striped" style="width:50%">
         <tbody>
                 <tr>
@@ -15,6 +31,18 @@
                 <tr>
                     <th>Date</th>
                     <td>{{foodsale.date}}</td>
+                </tr>
+                <tr>
+                    <th>Time</th>
+                    <td>
+                        {% if foodsale.sale_type == 'L' %}
+                        Lunch
+                        {% elif foodsale.sale_type == 'D' %}
+                        Dinner
+                        {% else %}
+                        Unknown
+                        {% endif %}
+                    </td>
                 </tr>
                 <tr>
                     <th>Price</th>

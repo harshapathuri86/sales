@@ -10,6 +10,18 @@
 <h1>Add sales</h1>
 <h2>Counter: {{counter.name}}</h2>
 <h3>Date: {{date}}</h3>
+{% comment %}
+  if sale_type is L show lunch else dinner
+{% endcomment %}
+<h3> Type: 
+{% if sale_type == 'L' %}
+  Lunch
+{% elif sale_type == 'D' %}
+  Dinner
+{% else %}
+  Unknown
+{% endif %}
+</h3>
 <br/>
 <div class="form-group">
   <form method="post">

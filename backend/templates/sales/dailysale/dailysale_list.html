@@ -19,6 +19,8 @@
             <thead>
                 <tr>
                     <th>Date</th>
+                    <th>Counter</th>
+                    <th>Time</th>
                     <th>Total Sale</th>
                 </tr>
             </thead>
@@ -26,10 +28,20 @@
                 {% for dailysale in dailysales %}
                 <tr>
                     <td>{{dailysale.date}}</td>
+                    <td>{{dailysale.counter__name}}</td>
+                    <td>
+                        {% if dailysale.sale_type == 'L' %}
+                        Lunch
+                        {% elif dailysale.sale_type == 'D' %}
+                        Dinner
+                        {% else %}
+                        Unknown
+                        {% endif %}
+                    </td>
                     <td>{{dailysale.total_sale}}</td>
                     <td>
     <button type="button" class="btn btn-info" 
-        onclick="location.href='{% url 'dailysale' dailysale.date %}'">View</button>
+        onclick="location.href='{% url 'dailysale' dailysale.counter dailysale.date dailysale.sale_type %}'">View</button>
                         </td>
                 </tr>
                 {% endfor %}
