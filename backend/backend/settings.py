@@ -29,8 +29,8 @@ with open('/home/ubuntu/sales/backend/.secret_key.txt') as f:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = [ '127.0.0.1', 'sales.pathuri.xyz']
-CSRF_TRUSTED_ORIGINS=['https://*.pathuri.xyz']
+ALLOWED_HOSTS = [ '127.0.0.1', 'sales.pathuri.dev']
+CSRF_TRUSTED_ORIGINS=['https://sales.pathuri.dev', 'http://sales.pathuri.dev']
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
