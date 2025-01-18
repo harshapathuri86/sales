@@ -23,13 +23,18 @@ LOGOUT_REDIRECT_URL = "/"
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-hkc&%2#wo0qp1#)1&zra5)(nn*4tjrqrln!e4&p&+(j-!^yo^%"
+with open('/home/ubuntu/sales/backend/.secret_key.txt') as f:
+    SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = ['100.127.147.10', '127.0.0.1', 'artix']
+ALLOWED_HOSTS = [ '127.0.0.1', 'sales.pathuri.dev', 'app.pathuri.dev', '144.24.140.57', '10.0.0.83', 'localhost']
+CSRF_TRUSTED_ORIGINS=['https://sales.pathuri.dev', 'http://sales.pathuri.dev', 'https://app.pathuri.dev', 'http://app.pathuri.dev']
 
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+#SECURE_SSL_REDIRECT = True
 
 # Application definition
 
@@ -44,6 +49,7 @@ INSTALLED_APPS = [
     "sales",
     "crispy_forms",
     "crispy_bootstrap5",
+
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -51,13 +57,12 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
-"django.middleware.security.SecurityMiddleware",
-"django.contrib.sessions.middleware.SessionMiddleware",
-"corsheaders.middleware.CorsMiddleware",
-"django.middleware.common.CommonMiddleware",
-"django.middleware.csrf.CsrfViewMiddleware",
-"django.contrib.auth.middleware.AuthenticationMiddleware",
-"django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
@@ -136,7 +141,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#STATIC_ROOT = '/var/www/sales/static'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'web/static'),
+]
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

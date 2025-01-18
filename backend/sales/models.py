@@ -13,7 +13,7 @@ class Counter(models.Model):
 
 class Item(models.Model):
     name = models.CharField(max_length=50, unique=True)
-    price = models.DecimalField(max_digits=5, decimal_places=3)
+    price = models.DecimalField(max_digits=6, decimal_places=3)
 
 
     def clean(self):
@@ -23,7 +23,6 @@ class Item(models.Model):
 
     def __str__(self):
         return self.name
-
 
 SALE_TYPE_CHOICES = (
     ('L', 'Lunch'),
@@ -48,7 +47,7 @@ class FoodSale(models.Model):
     date = models.DateField(default=timezone.now)
     sale_type = models.CharField(max_length=1, choices=SALE_TYPE_CHOICES, default='L')
 
-    price = models.DecimalField(max_digits=5, decimal_places=3)
+    price = models.DecimalField(max_digits=6, decimal_places=3)
     outgoing = models.IntegerField()
     incoming = models.IntegerField()
 

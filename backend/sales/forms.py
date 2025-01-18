@@ -7,7 +7,6 @@ from django.forms import ModelForm, HiddenInput, Form, ModelChoiceField, DateFie
 class CounterSelectForm(LoginRequiredMixin, Form):
     counter = ModelChoiceField(queryset=Counter.objects.all())
     date = DateField(initial=datetime.date.today, widget=DateInput(attrs={'type': 'date'}))
-    # sale type select from SALE_TYPE_CHOICES
     sale_type = ChoiceField(choices=SALE_TYPE_CHOICES)
 
 class FoodSaleForm(LoginRequiredMixin ,ModelForm):

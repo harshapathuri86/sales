@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve sales server
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory= /home/ubuntu/sales/backend/
+ExecStart= /home/ubuntu/sales/venv/bin/gunicorn backend.wsgi:application -c gunicorn_config.py
+
+[Install]
+WantedBy=multi-user.target
+
