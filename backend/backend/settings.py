@@ -29,8 +29,8 @@ with open('/home/ubuntu/sales/backend/.secret_key.txt') as f:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = [ '127.0.0.1', 'sales.pathuri.dev']
-CSRF_TRUSTED_ORIGINS=['https://sales.pathuri.dev', 'http://sales.pathuri.dev']
+ALLOWED_HOSTS = [ '127.0.0.1', 'sales.pathuri.dev', 'app.pathuri.dev', '144.24.140.57', '10.0.0.83', 'localhost']
+CSRF_TRUSTED_ORIGINS=['https://sales.pathuri.dev', 'http://sales.pathuri.dev', 'https://app.pathuri.dev', 'http://app.pathuri.dev']
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
@@ -142,8 +142,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_ROOT = '/var/www/sales/static'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#STATIC_ROOT = '/var/www/sales/static'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'web/static'),
