@@ -1,7 +1,7 @@
 import multiprocessing
 
-bind = '0.0.0.0:8000'  # The address and port to bind to
-workers = multiprocessing.cpu_count() * 2 + 1  # Number of worker processes
+bind = '0.0.0.0:8001'  # The address and port to bind to
+workers = 2  # Number of worker processes
 worker_class = 'gevent'  # The type of worker processes to use
 timeout = 30  # The maximum time (in seconds) for a request to be processed
 
